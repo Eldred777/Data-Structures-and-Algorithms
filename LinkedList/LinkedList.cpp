@@ -1,12 +1,22 @@
 #include <iostream>
 #include <memory>
 
+// TODO: Implement: pop, equals, iter, toString
+// TODO: Reference counted ConsCells to support merged lists. This may even work for circular lists?
+
 template <typename T>
 struct LinkedList
 {
-  T data;
-  // Initialise with null pointer
-  LinkedList<T> *next = 0;
+  ConsCell<T> *head;
+
+  bool isEmpty(){return bool(head)}; // TODO: test
+  size_t length();                   // TODO: implement
+  void append();                     // TODO: implement
+  void insert();                     // TODO: implement
+  void remove();                     // TODO: implement
+  void clear();                      // TODO: implement
+  void copy();                       // TODO: implement
+  void join();
 };
 
 // Nodes for a linked list. Note we use LISP convention for naming the parts of
@@ -18,6 +28,10 @@ struct ConsCell
   // Initialise with null pointer
   ConsCell<T> *cdr = 0;
 
+  LinkedList<T> toList()
+  {
+    return LinkedList{this};
+  }
 };
 
 int playing_around()
