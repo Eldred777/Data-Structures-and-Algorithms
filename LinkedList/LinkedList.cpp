@@ -9,64 +9,42 @@ struct LinkedList
   LinkedList<T> *next = 0;
 };
 
+// Nodes for a linked list. Note we use LISP convention for naming the parts of
+// the cons cell.
+template <typename T>
+struct ConsCell
+{
+  T car;
+  // Initialise with null pointer
+  ConsCell<T> *cdr = 0;
+
+};
+
 int playing_around()
 {
   // Make head of list
-  auto l = new LinkedList<int>();
+  auto l = new ConsCell<int>();
 
   // Allocate memory to head of list
-  l->data = -1;
+  l->car = -1;
 
   // Add some more cons cells
-  l->next = new LinkedList<int>();
-  l->next->data = 1;
+  l->cdr = new ConsCell<int>();
+  l->cdr->car = 1;
 
   // Check output
-  std::cout << l->data << " "
-            << l->next->data;
+  std::cout << l->car << " "
+            << l->cdr->car;
 
-  delete l->next, l;
-  // TODO: add something to `LinkedList` that takes care of this deletion for me.
+  delete l->cdr, l;
+  // TODO: add something to `ConsCell` that takes care of this deletion for me.
 
   return 0;
 }
-
-// ---------------------------------------------------
-// Trying to use shared pointers instead
-
-template <typename T>
-struct LinkedList_Shared
-{
-  T data;
-  std::shared_ptr<LinkedList_Shared<T>> next;
-};
-
-int playing_around_shared()
-{
-  // Make head of list
-  std::unique_ptr<LinkedList_Shared<int>> l(new LinkedList_Shared<int>);
-
-  // Allocate memory to head of list
-  l->data = -1;
-
-  std::cout << l->data << std::endl;
-
-  // Add some more cons cells
-  l->next = std::make_shared<LinkedList_Shared<int>>();
-  l->next->data = 1;
-
-  // Check output
-  std::cout << l->data << " "
-            << l->next->data;
-
-  return 0;
-}
-
-// ----------------------------------------------
 
 int main()
 {
-  playing_around_shared();
+  playing_around();
 
   return 0;
 }
