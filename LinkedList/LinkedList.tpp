@@ -1,5 +1,7 @@
 #include "LinkedList.hpp"
 
+#include <stdexcept>
+
 // Returns the length of the list
 template <typename T>
 size_t LinkedList<T>::length()
@@ -25,15 +27,19 @@ size_t LinkedList<T>::length()
 }
 // TODO: test, when this.head=NULL
 
+// Returns the last cons cell of the list.
+// Throws `std::length_error` if the list is empty.
 template <typename T>
 ConsCell<T> &LinkedList<T>::last()
 {
   // TODO: error if this.head == NULL, how to deal with?
   // Maybe throw an error?
+  if (!this->head)
+  {
+    throw std::length_error("last() called on an empty list")
+  }
 
-  // This traversal is essentially reused from length().
-
-  ConsCell<T> cell = this->head;
+  ConsCell<T> cell = *this->head;
 
   while (cell.cdr)
   {

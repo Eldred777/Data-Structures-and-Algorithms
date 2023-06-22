@@ -14,7 +14,7 @@ struct ConsCell;
 template <typename T>
 struct LinkedList
 {
-  ConsCell<T> *head = 0;
+  ConsCell<T> *head;
 
   // TODO: constructor from array (iterable?) of T
 
