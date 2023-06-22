@@ -1,9 +1,12 @@
 #ifndef __LINKEDLIST__H__
 #define __LINKEDLIST__H__
 
-// TODO: Implement: iter, toString
+#include <cstddef>
+
+// TODO: Implement: iter, toString, zip (casting?)
 // TODO: Reference counted ConsCells to support merged lists? This may even work for circular lists?
 // TODO: sorting algorithms
+// TODO: Is there a way to enforce null pointer safety in this? Perhaps implementing a next(). This will be much easier if I implement the Maybe monad.
 
 template <typename T>
 struct ConsCell;
@@ -17,14 +20,14 @@ struct LinkedList
 
   // TODO: deconstructor
 
-  bool isEmpty(){return bool(head)}; // TODO: test
+  bool isEmpty() { return bool(head); }; // TODO: test
   size_t length();
   ConsCell<T> &last();
   void append(ConsCell<T> &);
   void append(T);
   void prepend(ConsCell<T> &);
   void prepend(T);
-  bool insert(size_t);
+  void insert(size_t);
   void remove(T);
   void pop(size_t);
   ConsCell<T> &search(T);
@@ -39,15 +42,23 @@ template <typename T>
 struct ConsCell
 {
   T car;
-  // Initialise with null pointer
-  ConsCell<T> *cdr = 0;
+  ConsCell<T> *cdr;
+
+  // ConsCell() {}
 
   ConsCell(T datum)
   {
-    return new ConsCell{datum, 0};
+    car = datum;
+    cdr = 0;
   }
 
-  // TODO: deconstructor
+  ConsCell(T datum, ConsCell<T> *cell)
+  {
+    car = datum;
+    cdr = cell;
+  }
+
+  // TODO: deconstructor?
 
   LinkedList<T> toList()
   {

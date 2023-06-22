@@ -4,26 +4,44 @@
 template <typename T>
 size_t LinkedList<T>::length()
 {
+  // Empty list case.
+  if (!this.head)
+  {
+    return 0;
+  }
+
+  // List is non-empty.
   ConsCell<T> cell = this->head;
   size_t count = 1;
+
+  // Traverse the list
   while (cell.cdr) // is not null
   {
-    cell = cell.cdr;
+    cell = *cell.cdr;
     count++;
   }
+
   return count;
 }
-// TODO: TEST behaviour when this.head=NULL
+// TODO: test, when this.head=NULL
 
 template <typename T>
 ConsCell<T> &LinkedList<T>::last()
 {
-  // This is essentially reused from length, stripping the count.
+  // TODO: error if this.head == NULL, how to deal with?
+  // Maybe throw an error?
+
+  // This traversal is essentially reused from length().
+
   ConsCell<T> cell = this->head;
+
   while (cell.cdr)
   {
     cell = cell.cdr;
   }
+
+  // TODO: non-terminating loop if list is cyclic
+
   return cell;
 }
 // TODO: after testing length, if any changes were made propagate them here
@@ -46,7 +64,8 @@ void LinkedList<T>::append(T datum)
 }
 // TODO: test
 
-// Append a cons cell to the current list.
+// Prepend a given cons cell to the current list.
+// `cell` should be on the heap.
 // NOTE: cell's cdr is modified to point to `this.head`
 template <typename T>
 void LinkedList<T>::prepend(ConsCell<T> &cell)
@@ -56,7 +75,7 @@ void LinkedList<T>::prepend(ConsCell<T> &cell)
 }
 // TODO: test
 
-// Append a new cons cell to the current list, containing `datum`
+// Prepend a new cons cell to the current list, containing `datum`
 template <typename T>
 void LinkedList<T>::prepend(T datum)
 {
@@ -67,7 +86,7 @@ void LinkedList<T>::prepend(T datum)
 // TODO: test
 
 template <typename T>
-bool LinkedList<T>::insert(size_t index)
+void LinkedList<T>::insert(size_t index)
 {
   return;
 }
@@ -83,7 +102,7 @@ void LinkedList<T>::remove(T index)
 template <typename T>
 void pop(size_t index)
 {
-  return new ConsCell();
+  return;
 }
 // TODO: implement
 
@@ -137,16 +156,61 @@ std::ostream &operator<<(std::ostream &os, LinkedList<T> list)
   return os;
 }
 
+// Value equality
 template <typename T>
-bool operator==(ConsCell<T> &l1, ConsCell<T> &l2)
+bool operator==(const ConsCell<T> &cell1, const ConsCell<T> &cell2)
 {
-  // TODO: implement
-  return true;
+  return cell1.car == cell2.car;
 }
 
+// Value equality, O(N)
 template <typename T>
-bool operator==(LinkedList<T> &l1, LinkedList<T> &l2)
+bool operator==(const LinkedList<T> &l1, const LinkedList<T> &l2)
 {
-  // TODO: implement
-  return true;
+  // If they point to the same place then true, else check by value
+  if (l1.head == l2.head)
+  {
+    return true;
+  }
+
+  // We check equality of each cons cell
+  // Make sure neither is null
+  if (!(l1.head && l2.head))
+  {
+    return false;
+  }
+
+  const ConsCell<T> *cell1 = l1.head;
+  const ConsCell<T> *cell2 = l2.head;
+
+  while (true)
+  {
+    // Traverse the linked list and look at equality of cons cells.
+    // Branches annotated with --true? are able to return true values.
+
+    if (!(*cell1 == *cell2))
+    { // True => some cons cells contain different data
+      return false;
+    }
+    else if (!(cell1->cdr || cell2->cdr))
+    { // Check if both are null.
+      // True => final cons cell. Determined by equality of the cons cells.
+      return *cell1 == *cell2;
+    } // --true?
+    else if (!cell1->cdr && !cell2->cdr)
+    { // Check if either are null.
+      // Lists of different length cannot be equal.
+      return false;
+    }
+    else if (cell1 == l1.head || cell2 == l2.head)
+    { // Check if we have a loop
+      // True => at least one loop loops.
+      // Then the result is true only if
+      return cell1 == l1.head && cell2 == l2.head;
+    } // --true?
+
+    cell1 = cell1->cdr;
+    cell2 = cell2->cdr;
+  }
 }
+// TODO: test
