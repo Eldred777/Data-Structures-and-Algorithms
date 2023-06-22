@@ -7,7 +7,7 @@ template <typename T>
 size_t LinkedList<T>::length()
 {
   // Empty list case.
-  if (!this.head)
+  if (!this->head)
   {
     return 0;
   }
