@@ -59,5 +59,9 @@
         "xstddef": "cpp",
         "xtr1common": "cpp",
         "*.tpp": "cpp"
-    }
+    },
+    "cSpell.words": [
+        "LINKEDLIST",
+        "valgrind"
+    ]
 }

@@ -30,6 +30,7 @@ bool basic_construction_and_equality_of_ConsCell()
   return test_raw_comparison && test_equality_operator;
 }
 
-bool basic_construction_and_equality_of_LinkedList() {
-  return 1; 
+bool basic_construction_and_equality_of_LinkedList()
+{
+  return 1; // TODO: write
 }

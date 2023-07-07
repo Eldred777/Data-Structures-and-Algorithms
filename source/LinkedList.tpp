@@ -36,7 +36,7 @@ ConsCell<T> &LinkedList<T>::last()
   // Maybe throw an error?
   if (!this->head)
   {
-    throw std::length_error("last() called on an empty list")
+    throw std::length_error("last() called on an empty list");
   }
 
   ConsCell<T> cell = *this->head;
@@ -62,6 +62,7 @@ void LinkedList<T>::append(ConsCell<T> &cell)
 // TODO: test
 
 // Append a new cons cell to the current list, containing `datum`
+// This runs in O(n) time, as it must traverse the list.
 template <typename T>
 void LinkedList<T>::append(T datum)
 {
@@ -73,6 +74,7 @@ void LinkedList<T>::append(T datum)
 // Prepend a given cons cell to the current list.
 // `cell` should be on the heap.
 // NOTE: cell's cdr is modified to point to `this.head`
+// This runs in O(1) time, as the head is immediately available.
 template <typename T>
 void LinkedList<T>::prepend(ConsCell<T> &cell)
 {
@@ -129,24 +131,41 @@ void LinkedList<T>::clone()
 template <typename T>
 void LinkedList<T>::clear()
 {
-  return;
+  auto head = this->head;
+  auto cell_ptr = head;
+  auto previous = cell_ptr;
+
+  this->head = nullptr;
+
+  while (cell_ptr->cdr)
+  {
+    // In the case of a circular list, break.
+    if (cell_ptr == head)
+    {
+      break;
+    }
+
+    // Keep track of previous, go to next cell, delete the previous cell.
+    previous = cell_ptr;
+    cell_ptr = cell_ptr->cdr;
+    delete previous;
+  }
 }
-// TODO: implement
+// TODO: test: likely need to use valgrind to test this
+
+template <typename T>
+LinkedList<T>::~LinkedList()
+{
+  (*this).clear();
+}
 
 // ------------------------------------------------------------
 // ------------------------------------------------------------
 // ------------------------------------------------------------
+
+// IMPLEMENT OPERATORS, INCLUDING IOSTREAM PRINTING
+
 #include <iostream>
-
-template <typename T>
-std::ostream &operator<<(std::ostream &, ConsCell<T>);
-template <typename T>
-std::ostream &operator<<(std::ostream &, LinkedList<T>);
-
-template <typename T>
-bool operator==(ConsCell<T> &, ConsCell<T> &);
-template <typename T>
-bool operator==(LinkedList<T> &, LinkedList<T> &);
 
 template <typename T>
 std::ostream &operator<<(std::ostream &os, ConsCell<T> cell)

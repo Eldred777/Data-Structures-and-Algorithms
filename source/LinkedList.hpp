@@ -19,6 +19,7 @@ struct LinkedList
   // TODO: constructor from array (iterable?) of T
 
   // TODO: deconstructor
+  ~LinkedList();
 
   bool isEmpty() { return bool(head); }; // TODO: test
   size_t length();
@@ -37,7 +38,12 @@ struct LinkedList
 };
 
 // Nodes for a linked list. Note we use LISP convention of car and cdr for
-// naming the parts of the cons cell.
+// naming the parts of the cons cell. To minimise errors, users should not
+// interface with this class. `LinkedList` creates and destroys this class as
+// needed.
+// --IF-- one must, then note: This class should only ever be constructed on the
+// heap, else `delete` calls in the deconstructor of `LinkedList` will be in
+// error.
 template <typename T>
 struct ConsCell
 {
@@ -57,8 +63,6 @@ struct ConsCell
     car = datum;
     cdr = cell;
   }
-
-  // TODO: deconstructor?
 
   LinkedList<T> toList()
   {
